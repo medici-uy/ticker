@@ -18,8 +18,23 @@ type PeriodicWorkData struct {
 	Frequency string `json:"frequency"`
 }
 
+const engineHostnameKey = "ENGINE_HOSTNAME"
+const engineSecretKey = "ENGINE_SECRET"
+
 func handler(event TickerEvent) error {
-	url := fmt.Sprintf("https://%s/admin/periodic-work", os.Getenv("ENGINE_HOSTNAME"))
+	engineHostname, present := os.LookupEnv(engineHostnameKey)
+
+	if !present {
+		return fmt.Errorf("%v env var is not present", engineHostnameKey)
+	}
+
+	engineSecret, present := os.LookupEnv(engineHostnameKey)
+
+	if !present {
+		return fmt.Errorf("%v env var is not present", engineSecretKey)
+	}
+
+	url := fmt.Sprintf("https://%s/admin/periodic-work", engineHostname)
 	data := PeriodicWorkData(event)
 	dataJson, err := json.Marshal(data)
 
@@ -29,13 +44,13 @@ func handler(event TickerEvent) error {
 
 	request, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(dataJson))
 	request.Header.Set("Content-Type", "application/json")
-	request.Header.Set("Authorization", fmt.Sprintf("Bearer %v", os.Getenv("ENGINE_SECRET")))
+	request.Header.Set("Authorization", fmt.Sprintf("Bearer %v", engineSecret))
 
 	if err != nil {
 		return err
 	}
 
-	response, nil := http.DefaultClient.Do(request)
+	response, err := http.DefaultClient.Do(request)
 
 	if err != nil {
 		return err
