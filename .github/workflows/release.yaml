@@ -1,4 +1,4 @@
-name: Deploy
+name: Release
 
 permissions:
   contents: write
@@ -27,7 +27,7 @@ jobs:
       - name: Build and zip
         run: ./scripts/build_and_zip.sh
 
-      - name: Create release
+      - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ env.ZIP_FILE }}
