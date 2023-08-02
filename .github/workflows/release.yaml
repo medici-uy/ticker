@@ -30,4 +30,5 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: ${{ vars.GITHUB_SHA }}
           files: ${{ env.ZIP_FILE }}
