@@ -28,7 +28,5 @@ jobs:
         run: ./scripts/build_and_zip.sh
 
       - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ vars.GITHUB_SHA }}
-          files: ${{ env.ZIP_FILE }}
+        run: gh release create ${{ vars.GITHUB_SHA }} ${{ env.ZIP_FILE }} \
+          --latest
