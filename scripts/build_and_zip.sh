@@ -9,4 +9,3 @@ binary_name="bootstrap"
 
 go build -tags lambda.norpc -o "${binary_name}" main.go
 zip "${ZIP_FILE}" bootstrap
-ls

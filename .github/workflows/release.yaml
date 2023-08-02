@@ -27,12 +27,10 @@ jobs:
       - name: Build and zip
         run: ./scripts/build_and_zip.sh
 
-      - name: LS
-        run: ls
-
       - name: Release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create --latest \
+        run: gh release create \
           "${GITHUB_SHA}" \
-          ${{ env.ZIP_FILE }}
+          '${{ env.ZIP_FILE }}' \
+          --latest
