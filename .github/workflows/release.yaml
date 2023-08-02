@@ -31,5 +31,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release create --latest \
-          ${{ vars.GITHUB_SHA }} \
-          ${{ env.ZIP_FILE }}
+          ${{ env.GITHUB_SHA }} \
+          ./${{ env.ZIP_FILE }}
