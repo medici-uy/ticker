@@ -12,7 +12,7 @@ env:
   ZIP_FILE: ticker.zip
 
 jobs:
-  deploy:
+  release:
     runs-on: ubuntu-latest
 
     steps:
@@ -32,5 +32,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: gh release create \
           "${GITHUB_SHA}" \
-          '${{ env.ZIP_FILE }}' \
+          ticker.zip \
           --latest
