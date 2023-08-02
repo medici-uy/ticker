@@ -28,5 +28,7 @@ jobs:
         run: ./scripts/build_and_zip.sh
 
       - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: gh release create ${{ vars.GITHUB_SHA }} ${{ env.ZIP_FILE }} \
           --latest
