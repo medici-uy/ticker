@@ -9,6 +9,7 @@ on:
 env:
   GOOS: linux
   GOARCH: arm64
+  ZIP_FILE: ticker.zip
 
 jobs:
   deploy:
@@ -24,11 +25,9 @@ jobs:
           go-version: "stable"
 
       - name: Build and zip
-        env:
-          ZIP_FILE: ${{ vars.ZIP_FILE }}
         run: ./scripts/build_and_zip.sh
 
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ vars.ZIP_FILE }}
+          files: ${{ env.ZIP_FILE }}
