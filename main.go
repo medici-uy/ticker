@@ -18,23 +18,38 @@ type PeriodicWorkData struct {
 	Frequency string `json:"frequency"`
 }
 
+type Env struct {
+	EngineHostname string
+	EngineSecret   string
+}
+
+func NewEnv() (Env, error) {
+	engineHostname, err := validateEnv(engineHostnameKey)
+
+	if err != nil {
+		return Env{}, err
+	}
+
+	engineSecret, err := validateEnv(engineSecretKey)
+
+	if err != nil {
+		return Env{}, err
+	}
+
+	return Env{EngineHostname: engineHostname, EngineSecret: engineSecret}, nil
+}
+
 const engineHostnameKey = "ENGINE_HOSTNAME"
 const engineSecretKey = "ENGINE_SECRET"
 
 func handler(event TickerEvent) error {
-	engineHostname, present := os.LookupEnv(engineHostnameKey)
+	env, err := NewEnv()
 
-	if !present {
-		return fmt.Errorf("%v env var is not present", engineHostnameKey)
+	if err != nil {
+		return err
 	}
 
-	engineSecret, present := os.LookupEnv(engineHostnameKey)
-
-	if !present {
-		return fmt.Errorf("%v env var is not present", engineSecretKey)
-	}
-
-	url := fmt.Sprintf("https://%s/admin/periodic-work", engineHostname)
+	url := fmt.Sprintf("https://%s/admin/periodic-work", env.EngineHostname)
 	data := PeriodicWorkData(event)
 	dataJson, err := json.Marshal(data)
 
@@ -44,7 +59,7 @@ func handler(event TickerEvent) error {
 
 	request, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(dataJson))
 	request.Header.Set("Content-Type", "application/json")
-	request.Header.Set("Authorization", fmt.Sprintf("Bearer %v", engineSecret))
+	request.Header.Set("Authorization", fmt.Sprintf("Bearer %v", env.EngineSecret))
 
 	if err != nil {
 		return err
@@ -63,6 +78,16 @@ func handler(event TickerEvent) error {
 	}
 
 	return nil
+}
+
+func validateEnv(key string) (string, error) {
+	value, present := os.LookupEnv(key)
+
+	if !present {
+		return "", fmt.Errorf("%v env var is not present", key)
+	}
+
+	return value, nil
 }
 
 func main() {
