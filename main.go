@@ -83,12 +83,13 @@ func callPeriodicWork(dataJson []byte, engineHostname string, engineSecret strin
 	url := fmt.Sprintf("https://%s/admin/periodic-work", engineHostname)
 
 	request, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(dataJson))
-	request.Header.Set("Content-Type", "application/json")
-	request.Header.Set("Authorization", fmt.Sprintf("Bearer %v", engineSecret))
 
 	if err != nil {
 		return nil, err
 	}
+
+	request.Header.Set("Content-Type", "application/json")
+	request.Header.Set("Authorization", fmt.Sprintf("Bearer %v", engineSecret))
 
 	response, err := http.DefaultClient.Do(request)
 
