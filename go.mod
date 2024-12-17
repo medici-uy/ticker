@@ -1,5 +1,5 @@
 module ticker
 
-go 1.20
+go 1.23
 
-require github.com/aws/aws-lambda-go v1.41.0
+require github.com/aws/aws-lambda-go v1.47.0
