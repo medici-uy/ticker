@@ -6,13 +6,9 @@ permissions:
 on:
   workflow_dispatch:
 
-env:
-  GOOS: linux
-  GOARCH: arm64
-
 jobs:
   release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
 
     steps:
       - name: Checkout
